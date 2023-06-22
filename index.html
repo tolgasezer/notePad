@@ -12,25 +12,28 @@
         integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS"
         crossorigin="anonymous"></script>
     <link rel="stylesheet" href="/assets/style.css">
-    <script src="/assets/app.js"></script>
+    <script src="/assets/app.js" defer></script>
 </head>
 
 <body>
+    
     <div class="notes" id="app">
-        <div class="notes__sidebar">
-            <button class="notes__add" type="button">Add Note</button>
-            <div class="notes__list">
-                <div class="notes__list-item notes__list-item--selected">
+        <div class="notes_main">
+            <button class="notes_add" type="button">Add Note</button>
+            <div class="notes_list">
+                <div class="notes_list-item selected">
                     <div class="notes__small-title">Lecture Notes</div>
-                    <div class="notes__small-body">I learnt nothing today.</div>
-                    <div class="notes__small-updated">Thursday 3:30pm</div>
+                    <div class="notes__list-item--button-group">
+                        <button class="notes__arrow-up" type="button">&uarr;</button>
+                        <button class="notes__arrow-down" type="button">&darr;</button>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="notes__preview">
             <input class="notes__title" type="text" placeholder="Enter a title...">
             <textarea class="notes__body">I am the notes body...</textarea>
-        </div> 
+        </div>
     </div>
 </body>
 
