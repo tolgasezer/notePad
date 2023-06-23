@@ -24,6 +24,7 @@ const newNoteFUnc = () => {
 };
 //html in icinde durmasin diye kendimi yersiz karmasaya soktum. Bir kolay yolu olmali
 const renderNotesList = () => {
+    notesListArea.innerHTML = '';
   notes.forEach((note, index) => {
     //index i butonlara ekleyecegim eventlistener icin kullanacagim unutma!
     const notesListItem = document.createElement("div");
