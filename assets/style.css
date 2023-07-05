@@ -34,7 +34,10 @@ body {
   width: 100%;
 }
 
-.notes__add:hover {
+.notes__add:hover,
+.notes__arrow-down:hover,
+.notes__arrow-up:hover,
+.notes__delete-icon:hover {
   background: #00af8c;
 }
 
@@ -86,7 +89,8 @@ body {
     text-align: end;
 }
 .notes__arrow-up,
-.notes__arrow-down {
+.notes__arrow-down,
+.notes__delete-icon {
     
   font-size: 16px;
   border: 2px solid #009578;
@@ -101,6 +105,10 @@ body {
 }
 
 .notes__arrow-down {
+  margin-right: 5px;
+  align-items: flex-end;
+}
+.notes__delete-icon {
   margin-right: 5px;
   align-items: flex-end;
 }
