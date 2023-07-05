@@ -51,21 +51,24 @@ const renderNotesList = () => {
     upArrow.classList.add("notes__arrow-up");
     upArrow.textContent = "⬆";
     upArrow.setAttribute("type", "button");
-    if (index === 0 ){
-      upArrow.style.display = 'none'
-    };
+   
     
 
     const downArrow = document.createElement("button");
     downArrow.classList.add("notes__arrow-down");
     downArrow.textContent = "⬇";
     downArrow.setAttribute("type", "button");
-    if(index === -1){
-      downArrow.style.display='none';
+    if(index > 0 ){
+      btnGroup.appendChild(upArrow);
+
     }
 
-    btnGroup.appendChild(upArrow);
-    btnGroup.appendChild(downArrow);
+    if(index < notes.length -1){
+      btnGroup.appendChild(downArrow);
+    }
+   
+
+    
     notesListItem.appendChild(noteTitle);
     notesListItem.appendChild(noteBody);
     notesListItem.appendChild(btnGroup);
@@ -86,8 +89,7 @@ const loadNotesFromStorage = () =>{
     notes = JSON.parse(storedNotes);
   }
 };
-loadNotesFromStorage();
-renderNotesList();
+
 
 let selectedNote = null;
 const notesClickHandler = (event) => {
@@ -102,6 +104,7 @@ const notesClickHandler = (event) => {
 };
 
 const selectEl = (target) => {
+  //dusundugum gibi calismiyor
   if (
     !target.classList.contains("notes__arrow-up") &&
     !target.classList.contains("notes__arrow-down")
@@ -119,12 +122,16 @@ const selectEl = (target) => {
   }
 };
 
+
+//not icerigi goster
 const showFullNote = (target) => {
   const title = document.querySelector("h1");
   const body = document.querySelector("p");
   title.textContent = target.querySelector(".notes__small-title").textContent;
   body.textContent = target.querySelector(".notes__body").textContent;
 };
+
+//notlar yukari
 
 const moveNoteUp = (index)=> {
   if (index > 0) {
@@ -136,7 +143,7 @@ const moveNoteUp = (index)=> {
   }
 }
 
-// Notu aşağı taşıma fonksiyonu
+// Notlar asagi
 const moveNoteDown = (index) => {
   if (index < notes.length - 1) {
     var temp = notes[index];
@@ -147,6 +154,8 @@ const moveNoteDown = (index) => {
   }
 }
 
+loadNotesFromStorage();
+renderNotesList();
 
 notesListArea.addEventListener("click", notesClickHandler);
 addNoteBtn.addEventListener("click", newNoteFUnc);
