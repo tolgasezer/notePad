@@ -1,6 +1,8 @@
 const addNoteBtn = document.querySelector(".notes_add");
 const notesListArea = document.querySelector(".notes_list");
 const notesListEl = document.querySelector(".notes_list-item");
+const upArrow = document.getElementsByClassName("notes__arrow-up");
+const downArrow = document.querySelector(".notes__arrow-down");
 let title = "something";
 let body = "something different";
 let notes = [];
@@ -20,11 +22,13 @@ const newNoteFUnc = () => {
   const description = prompt("Not Icerigi");
   const newNote = { title: title, body: description };
   notes.push(newNote);
+  saveNotesLocalStorage();
   renderNotesList();
 };
 //html in icinde durmasin diye kendimi yersiz karmasaya soktum. Bir kolay yolu olmali
 const renderNotesList = () => {
-    notesListArea.innerHTML = '';
+  notesListArea.innerHTML = '';
+  
   notes.forEach((note, index) => {
     //index i butonlara ekleyecegim eventlistener icin kullanacagim unutma!
     const notesListItem = document.createElement("div");
@@ -47,11 +51,18 @@ const renderNotesList = () => {
     upArrow.classList.add("notes__arrow-up");
     upArrow.textContent = "⬆";
     upArrow.setAttribute("type", "button");
+    if (index === 0 ){
+      upArrow.style.display = 'none'
+    };
+    
 
     const downArrow = document.createElement("button");
     downArrow.classList.add("notes__arrow-down");
     downArrow.textContent = "⬇";
-    upArrow.setAttribute("type", "button");
+    downArrow.setAttribute("type", "button");
+    if(index === -1){
+      downArrow.style.display='none';
+    }
 
     btnGroup.appendChild(upArrow);
     btnGroup.appendChild(downArrow);
@@ -59,8 +70,24 @@ const renderNotesList = () => {
     notesListItem.appendChild(noteBody);
     notesListItem.appendChild(btnGroup);
     notesListArea.appendChild(notesListItem);
+    upArrow.addEventListener('click', ()=>{moveNoteUp(index)});
+    downArrow.addEventListener('click', ()=>{moveNoteDown(index)});
   });
+  console.log(notes);
 };
+
+const saveNotesLocalStorage = () =>{
+  localStorage.setItem('notes', JSON.stringify(notes));
+};
+
+const loadNotesFromStorage = () =>{
+  const storedNotes = localStorage.getItem('notes');
+  if(storedNotes){
+    notes = JSON.parse(storedNotes);
+  }
+};
+loadNotesFromStorage();
+renderNotesList();
 
 let selectedNote = null;
 const notesClickHandler = (event) => {
@@ -99,5 +126,30 @@ const showFullNote = (target) => {
   body.textContent = target.querySelector(".notes__body").textContent;
 };
 
+const moveNoteUp = (index)=> {
+  if (index > 0) {
+    var temp = notes[index];
+    notes[index] = notes[index - 1];
+    notes[index - 1] = temp;
+    saveNotesLocalStorage();
+    renderNotesList();
+  }
+}
+
+// Notu aşağı taşıma fonksiyonu
+const moveNoteDown = (index) => {
+  if (index < notes.length - 1) {
+    var temp = notes[index];
+    notes[index] = notes[index + 1];
+    notes[index + 1] = temp;
+    saveNotesLocalStorage();
+    renderNotesList();
+  }
+}
+
+
 notesListArea.addEventListener("click", notesClickHandler);
 addNoteBtn.addEventListener("click", newNoteFUnc);
+//upArrow.addEventListener("click", moveNoteUp(index));
+//downArrow.addEventListener("click",moveNoteDown(index));
+
