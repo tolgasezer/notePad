@@ -67,7 +67,11 @@ const renderNotesList = () => {
       btnGroup.appendChild(downArrow);
     }
    
-
+    const deleteBtn = document.createElement("button");
+    deleteBtn.classList.add("notes__delete-icon");
+    deleteBtn.textContent = "X";
+    deleteBtn.setAttribute("type", "button");
+    notesListItem.appendChild(deleteBtn)
     
     notesListItem.appendChild(noteTitle);
     notesListItem.appendChild(noteBody);
@@ -75,6 +79,7 @@ const renderNotesList = () => {
     notesListArea.appendChild(notesListItem);
     upArrow.addEventListener('click', ()=>{moveNoteUp(index)});
     downArrow.addEventListener('click', ()=>{moveNoteDown(index)});
+    deleteBtn.addEventListener('click', ()=>{deleteNote(index)} );
   });
   console.log(notes);
 };
@@ -135,7 +140,7 @@ const showFullNote = (target) => {
 
 const moveNoteUp = (index)=> {
   if (index > 0) {
-    var temp = notes[index];
+    let temp = notes[index];
     notes[index] = notes[index - 1];
     notes[index - 1] = temp;
     saveNotesLocalStorage();
@@ -146,12 +151,18 @@ const moveNoteUp = (index)=> {
 // Notlar asagi
 const moveNoteDown = (index) => {
   if (index < notes.length - 1) {
-    var temp = notes[index];
+    let temp = notes[index];
     notes[index] = notes[index + 1];
     notes[index + 1] = temp;
     saveNotesLocalStorage();
     renderNotesList();
   }
+}
+
+const deleteNote = (index) =>{
+  notes.splice(index, 1);
+  saveNotesLocalStorage();
+  renderNotesList();
 }
 
 loadNotesFromStorage();
