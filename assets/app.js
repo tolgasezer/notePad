@@ -9,10 +9,10 @@ let notes = [];
 
 /* <div class="notes_list">
                 <div class="notes_list-item">
-                    <div class="notes__small-title">Lecture Notes</div>
+                    <div class="notes__small-title">not basligi</div>
                     <div class="notes__list-item--button-group">
-                        <button class="notes__arrow-up" type="button">&uarr;</button>
-                        <button class="notes__arrow-down" type="button">&darr;</button>
+                        <button class="notes__arrow-up" type="button">up arrow</button>
+                        <button class="notes__arrow-down" type="button">down arrow</button>
                     </div>
                 </div>
             </div> */
