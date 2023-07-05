@@ -69,9 +69,9 @@ const renderNotesList = () => {
    
     const deleteBtn = document.createElement("button");
     deleteBtn.classList.add("notes__delete-icon");
-    deleteBtn.textContent = "X";
+    deleteBtn.textContent = "␡";
     deleteBtn.setAttribute("type", "button");
-    notesListItem.appendChild(deleteBtn)
+    btnGroup.appendChild(deleteBtn)
     
     notesListItem.appendChild(noteTitle);
     notesListItem.appendChild(noteBody);
