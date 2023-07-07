@@ -1,104 +1,114 @@
-const addNoteBtn = document.querySelector(".notes_add");
-const notesListArea = document.querySelector(".notes_list");
-const notesListEl = document.querySelector(".notes_list-item");
-const upArrow = document.getElementsByClassName("notes__arrow-up");
-const downArrow = document.querySelector(".notes__arrow-down");
-let title = "something";
-let body = "something different";
-let notes = [];
+const addNoteBtn = document.querySelector('.notes_add');
+const notesListArea = document.querySelector('.notes_list');
+const notesListEl = document.querySelector('.notes_list-item');
+const upArrow = document.getElementsByClassName('notes__arrow-up');
+const downArrow = document.querySelector('.notes__arrow-down');
 
-/* <div class="notes_list">
-                <div class="notes_list-item">
-                    <div class="notes__small-title">not basligi</div>
-                    <div class="notes__list-item--button-group">
-                        <button class="notes__arrow-up" type="button">up arrow</button>
-                        <button class="notes__arrow-down" type="button">down arrow</button>
-                    </div>
-                </div>
-            </div> */
+const notes = [];
+let title = 'something';
+let body = 'something different';
+let selectedNote = null;
 
 const newNoteFUnc = () => {
-  const title = prompt("Not Basligi:");
-  const description = prompt("Not Icerigi");
+  const title = prompt('Not Basligi:');
+  if (!title) return;
+  const description = prompt('Not Icerigi');
   const newNote = { title: title, body: description };
-  notes.push(newNote);
-  saveNotesLocalStorage();
-  renderNotesList();
+  if (title && description) {
+    notes.push(newNote);
+    saveNotesLocalStorageAndRender();
+  }
 };
-//html in icinde durmasin diye kendimi yersiz karmasaya soktum. Bir kolay yolu olmali
+
+//*********
+
+// listeye tek not ekleme func
+// rendernoteslist icindeki dongude her bir not icin listeye tek not ekleme cagrilir
+//rendernotelist(){
+//  notes.forEach((note) => {
+//  if(isLastItem) return
+//    renderNoteItem(note);
+//  });
+//}
+
+//*********
+
 const renderNotesList = () => {
   notesListArea.innerHTML = '';
-  
+
   notes.forEach((note, index) => {
     //index i butonlara ekleyecegim eventlistener icin kullanacagim unutma!
-    const notesListItem = document.createElement("div");
-    notesListItem.classList.add("notes_list-item");
-    
-    const noteTitle = document.createElement("div");
-    noteTitle.classList.add("notes__small-title");
+    const notesListItem = document.createElement('div');
+    notesListItem.classList.add('notes_list-item');
+
+    const noteTitle = document.createElement('div');
+    noteTitle.classList.add('notes__small-title');
     noteTitle.textContent = note.title;
 
-    const noteBody = document.createElement("div");
-    noteBody.style.display = "none";
-    noteBody.classList.add("notes__body");
+    const noteBody = document.createElement('div');
+    noteBody.style.display = 'none';
+    noteBody.classList.add('notes__body');
     noteBody.textContent = note.body;
 
-    const btnGroup = document.createElement("div");
-    btnGroup.classList.add("notes__list-item--button-group");
+    const btnGroup = document.createElement('div');
+    btnGroup.classList.add('notes__list-item--button-group');
     //butonlara eventlistener icin moveUp moveDown fonksiyonu yaz. shuffle a benzer olacak
-    // tempval= currentindex sonra currentIndex =  currentInd+1 currentInd+1 = tempVal olacak digeri icin +1 yerine -1  
-    const upArrow = document.createElement("button");
-    upArrow.classList.add("notes__arrow-up");
-    upArrow.textContent = "⬆";
-    upArrow.setAttribute("type", "button");
-   
-    
-
-    const downArrow = document.createElement("button");
-    downArrow.classList.add("notes__arrow-down");
-    downArrow.textContent = "⬇";
-    downArrow.setAttribute("type", "button");
-    if(index > 0 ){
+    // tempval= currentindex sonra currentIndex =  currentInd+1 currentInd+1 = tempVal olacak digeri icin +1 yerine -1
+    if (index > 0) {
+      const upArrow = document.createElement('button');
+      upArrow.classList.add('notes__arrow-up');
+      upArrow.textContent = '⬆';
+      upArrow.setAttribute('type', 'button');
       btnGroup.appendChild(upArrow);
-
+      upArrow.addEventListener('click', () => {
+        moveNoteUp(index);
+      });
     }
 
-    if(index < notes.length -1){
+    if (index < notes.length - 1) {
+      const downArrow = document.createElement('button');
+      downArrow.classList.add('notes__arrow-down');
+      downArrow.textContent = '⬇';
+      downArrow.setAttribute('type', 'button');
       btnGroup.appendChild(downArrow);
+      downArrow.addEventListener('click', () => {
+        moveNoteDown(index);
+      });
     }
-   
-    const deleteBtn = document.createElement("button");
-    deleteBtn.classList.add("notes__delete-icon");
-    deleteBtn.textContent = "␡";
-    deleteBtn.setAttribute("type", "button");
-    btnGroup.appendChild(deleteBtn)
-    
+
+    const deleteBtn = document.createElement('button');
+    deleteBtn.classList.add('notes__delete-icon');
+    deleteBtn.textContent = '␡';
+    deleteBtn.setAttribute('type', 'button');
+    btnGroup.appendChild(deleteBtn);
+
     notesListItem.appendChild(noteTitle);
     notesListItem.appendChild(noteBody);
     notesListItem.appendChild(btnGroup);
     notesListArea.appendChild(notesListItem);
-    upArrow.addEventListener('click', ()=>{moveNoteUp(index)});
-    downArrow.addEventListener('click', ()=>{moveNoteDown(index)});
-    deleteBtn.addEventListener('click', ()=>{deleteNote(index)} );
+
+    deleteBtn.addEventListener('click', () => {
+      deleteNote(index);
+    });
   });
   console.log(notes);
 };
 
-const saveNotesLocalStorage = () =>{
+const saveNotesLocalStorageAndRender = () => {
   localStorage.setItem('notes', JSON.stringify(notes));
+  renderNotesList();
 };
 
-const loadNotesFromStorage = () =>{
+const loadNotesFromStorage = () => {
   const storedNotes = localStorage.getItem('notes');
-  if(storedNotes){
-    notes = JSON.parse(storedNotes);
+  if (storedNotes) {
+    notes.push(...JSON.parse(storedNotes));
   }
+  renderNotesList();
 };
 
-
-let selectedNote = null;
 const notesClickHandler = (event) => {
-  const selectedNote = event.target.closest(".notes_list-item");
+  const selectedNote = event.target.closest('.notes_list-item');
 
   if (!selectedNote) {
     return;
@@ -110,43 +120,39 @@ const notesClickHandler = (event) => {
 
 const selectEl = (target) => {
   //dusundugum gibi calismiyor
-  if (
-    !target.classList.contains("notes__arrow-up") &&
-    !target.classList.contains("notes__arrow-down")
-  ) {
+  console.log(target.classList);
+  if (!target.classList.contains('notes__arrow-up') || !target.classList.contains('notes__arrow-down')) {
     if (selectedNote) {
-      selectedNote.classList.remove("selected");
+      selectedNote.classList.remove('selected');
     }
-    target.classList.add("selected");
+    target.classList.add('selected');
     selectedNote = target;
   } else {
     if (selectedNote) {
-      selectedNote.classList.remove("selected");
+      selectedNote.classList.remove('selected');
       selectedNote = null;
     }
   }
 };
 
-
 //not icerigi goster
 const showFullNote = (target) => {
-  const title = document.querySelector("h1");
-  const body = document.querySelector("p");
-  title.textContent = target.querySelector(".notes__small-title").textContent;
-  body.textContent = target.querySelector(".notes__body").textContent;
+  //id ile secmek daha iyi olabilir
+  const title = document.querySelector('h1');
+  const body = document.querySelector('p');
+  title.textContent = target.querySelector('.notes__small-title').textContent;
+  body.textContent = target.querySelector('.notes__body').textContent;
 };
 
-//notlar yukari
-
-const moveNoteUp = (index)=> {
+//notlar yukari donlar assa
+const moveNoteUp = (index) => {
   if (index > 0) {
     let temp = notes[index];
     notes[index] = notes[index - 1];
     notes[index - 1] = temp;
-    saveNotesLocalStorage();
-    renderNotesList();
+    saveNotesLocalStorageAndRender();
   }
-}
+};
 
 // Notlar asagi
 const moveNoteDown = (index) => {
@@ -154,22 +160,16 @@ const moveNoteDown = (index) => {
     let temp = notes[index];
     notes[index] = notes[index + 1];
     notes[index + 1] = temp;
-    saveNotesLocalStorage();
-    renderNotesList();
+    saveNotesLocalStorageAndRender();
   }
-}
+};
 
-const deleteNote = (index) =>{
+const deleteNote = (index) => {
   notes.splice(index, 1);
-  saveNotesLocalStorage();
-  renderNotesList();
-}
+  saveNotesLocalStorageAndRender();
+};
 
 loadNotesFromStorage();
-renderNotesList();
 
-notesListArea.addEventListener("click", notesClickHandler);
-addNoteBtn.addEventListener("click", newNoteFUnc);
-//upArrow.addEventListener("click", moveNoteUp(index));
-//downArrow.addEventListener("click",moveNoteDown(index));
-
+notesListArea.addEventListener('click', notesClickHandler);
+addNoteBtn.addEventListener('click', newNoteFUnc);
